@@ -66,6 +66,7 @@ int main(int argc, char* argv[])
                 break;
             }
         }
+        std::cout << "Hello World" << std::endl;
         FramePerSecond();
         SDL_RenderPresent(renderer);
     }
