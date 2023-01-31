@@ -24,6 +24,7 @@ BaseObject* g_background = new BaseObject();
 MainObject* g_player = new MainObject();
 int main(int argc, char* argv[])
 {
+    std::cout << "Hello World" << "\n";
     //if(!InitData()) return -1;
     SDL_Init(SDL_INIT_VIDEO);
     SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "best");
