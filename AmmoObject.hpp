@@ -1,9 +1,10 @@
+#ifndef AMMO_OBJECT_H
 #include "CommonFunc.h"
 #include "BaseObject.h"
-#define NONE 1
-#define ION 2
-#define DOUBLE_ION 3
-#define LASER 4
+#define AMMO_OBJECT_H
+
+
+
 class AmmoObject : public BaseObject
 {
 protected:
@@ -23,8 +24,16 @@ public:
     void Set_Can_Move(bool Can_Move) { this->Can_Move = Can_Move; }
     bool Get_Can_Move() const { return Can_Move; }
     // handle input from user down to up
+    void set_width_height(const int &width, const int &height);
     void Handle_Input_Action_BTU(const int &WIDTH_BORDER, const int &HEIGHT_BORDER);
 };
+
+void AmmoObject::set_width_height(const int &width, const int &height)
+{
+    AmmoObject::rect_.w = width;
+    AmmoObject::rect_.h = height;
+}
+
 AmmoObject::AmmoObject()
 {
     AMMO_VEL = 0;
@@ -42,3 +51,4 @@ void AmmoObject::Handle_Input_Action_BTU(const int &WIDTH_BORDER, const int &HEI
         Can_Move = false;
     }
 }
+#endif

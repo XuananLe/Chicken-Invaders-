@@ -21,8 +21,11 @@ public:
     }
     SDL_Rect GetRect() const { return rect_; }
     SDL_Texture *GetObject() const { return p_object_; }
+    
+    void set_width_height(const int &width, const int &height){ rect_.w = width; rect_.h = height;}
     void Set_Rect(const int &x, const int &y) { rect_.x = x; rect_.y = y; }
     void Set_Rect(const int &x, const int &y, const int &width, const int &height) { rect_.x = x; rect_.y = y; rect_.w = width; rect_.h = height; }
+    
     void SetTexture(SDL_Texture *p_object_) { this->p_object_ = p_object_; }
     void Render(const double &angle) { SDL_RenderCopyEx(renderer, p_object_, NULL, &rect_, angle, NULL, SDL_FLIP_NONE); }
     void Render() { SDL_RenderCopy(renderer, p_object_, NULL, &rect_); }
@@ -121,8 +124,8 @@ void BaseObject::free()
 }
 bool HasCollision(const BaseObject *A, const BaseObject *B)
 {
-    const SDL_Rect rectA = (A->GetRect());
-    const SDL_Rect rectB = B->GetRect();
+    SDL_Rect rectA = A->GetRect();
+    SDL_Rect rectB = B->GetRect();
     if (SDL_HasIntersection(&rectA, &rectB) == SDL_TRUE)
     {
         return true;

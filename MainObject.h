@@ -13,7 +13,7 @@ public:
     bool LoadIMG(const char *file_path);
     // SHOW THEO DANG FRAME CHU KHONG CHI RENDER COPY
     void Show();
-    void HandleInputAction();
+    void HandleInputAction(SDL_Event event);
 
     // xu li animation
     void set_clips();
@@ -37,7 +37,7 @@ protected:
     // kich co cua frame
     int width_frame;
     int height_frame;
-    SDL_Rect frame_clip_[4];
+    SDL_Rect frame_clip_[MAIN_OBJECT_NUMS_FRAME];
 
     // input type
     // Input input_type_;
@@ -54,12 +54,12 @@ bool MainObject::LoadIMG(const char *file_path)
     bool ret = BaseObject::LoadIMG(file_path);
     if (ret == true)
     {
-        // chieu rong cua frame
+        // chieu rong cua fram e
         // rect_.w la kich co tam anh load vao
         // chia cho 4 vi co 4 frame
         std::cout << "rect_.w: " << rect_.w << std::endl;
         std::cout << "rect_.h: " << rect_.h << std::endl;
-        width_frame = rect_.w / 4;
+        width_frame = rect_.w / MAIN_OBJECT_NUMS_FRAME;
         height_frame = rect_.h;
         std::cout << "width_frame: " << width_frame << std::endl;
         std::cout << "height_frame: " << height_frame << std::endl;
@@ -83,98 +83,79 @@ MainObject::MainObject()
 // set xem tung frame co kich co bao nhieu va vi tri bao nhieu
 void MainObject::set_clips()
 {
-    if (width_frame > 0 && height_frame > 0)
+    if (width_frame >= 0 && height_frame >= 0)
     {
-        frame_clip_[0].x = 0;
-        frame_clip_[0].y = 0;
-        frame_clip_[0].w = width_frame;
-        frame_clip_[0].h = height_frame;
-
-        frame_clip_[1].x = width_frame;
-        frame_clip_[1].y = 0;
-        frame_clip_[1].w = width_frame;
-        frame_clip_[1].h = height_frame;
-
-        frame_clip_[2].x = width_frame * 2;
-        frame_clip_[2].y = 0;
-        frame_clip_[2].w = width_frame;
-        frame_clip_[2].h = height_frame;
-
-        frame_clip_[3].x = width_frame * 3;
-        frame_clip_[3].y = 0;
-        frame_clip_[3].w = width_frame;
-        frame_clip_[3].h = height_frame;
+        for(int i = 0; i < MAIN_OBJECT_NUMS_FRAME; i++)
+        {
+            frame_clip_[i].x = i * width_frame;
+            frame_clip_[i].y = 0;
+            frame_clip_[i].w = width_frame;
+            frame_clip_[i].h = height_frame;
+        }
     }
 }
 // hien thi animation
 void MainObject::Show()
 {
-    // rect_.x = x_pos;
-    // rect_.y = y_pos;
-    if (frame_ >= 3)
+    Uint32 currentTicks = SDL_GetTicks();
+    if (currentTicks - MAIN_OBJECT_startTicks > MAIN_OBJECT_spritetime)
     {
-        frame_ = 0;
+        MAIN_OBJECT_spriteIndex = (MAIN_OBJECT_spriteIndex + 1) % 4;
+        MAIN_OBJECT_startTicks = currentTicks;
     }
-    else
-    {
-        ++frame_;
-    }
-    // frame_ = 0;
-    //  rect gan nhat
-    SDL_Rect *current_clip = &frame_clip_[frame_];
-    SDL_Rect renderquad = {rect_.x, rect_.y, width_frame, height_frame};
-    SDL_RenderCopy(renderer, p_object_, current_clip, &renderquad);
+    SDL_Rect destRect = {rect_.x, rect_.y, width_frame, height_frame};
+
+    // Render the current sprite
+    SDL_RenderCopy(renderer,p_object_, &frame_clip_[MAIN_OBJECT_spriteIndex], &destRect);
 }
 
-void MainObject::HandleInputAction()
+void MainObject::HandleInputAction(SDL_Event event)
 {
-    while (SDL_PollEvent(&event))
+    if (event.type == SDL_MOUSEMOTION)
     {
-        if (event.type == SDL_MOUSEMOTION)
-        {
-            int x = 0;
-            int y = 0;
-            SDL_GetMouseState(&x, &y);
-            rect_.x = x - MAINOBJECT_WIDTH / 2;
-            rect_.y = y - MAINOBJECT_HEIGHT;
-        }
-        else if(event.type == SDL_KEYDOWN)
-        {
-            switch(event.key.keysym.sym)
-            {
-                case SDLK_SPACE:
-                std::cout << "Count" << std::endl;
-                AmmoObject *p_bullet = new AmmoObject();   
-                p_bullet->Set_AmmoType(LASER);
-                p_bullet->Set_Can_Move(true);
-                p_bullet->Set_AMMO_VEL(12);
-                p_bullet->Set_Rect(MainObject::rect_.x + MAINOBJECT_WIDTH / 2, MainObject::rect_.y);
-                p_bullet->LoadIMG("/home/xuananle/Documents/PROJECT CHICKEN/Assets/image/arrow.png");
-                break;
-            }
-        }
+        int x = 0;
+        int y = 0;
+        SDL_GetMouseState(&x, &y);
+        rect_.x = x - MAINOBJECT_WIDTH / 2;
+        rect_.y = y - MAINOBJECT_HEIGHT;
+    }
+    else if (event.type == SDL_MOUSEBUTTONDOWN)
+    {
+        AmmoObject *p_bullet = new AmmoObject();
+        p_bullet->Set_AmmoType(LASER);
+        p_bullet->Set_Can_Move(true);
+        p_bullet->set_width_height(LASER_WIDTH, LASER_HEIGHT);
+        p_bullet->Set_AMMO_VEL(LASER_VEL);
+        p_bullet->Set_Rect(MainObject::rect_.x + MAINOBJECT_WIDTH / 2, MainObject::rect_.y);
+        p_bullet->LoadIMG("Assets/image/arrow.png");
+        p_bullet_list_.push_back(p_bullet);
+    }
+    else if (event.type == SDL_KEYDOWN)
+    {
+        
     }
 }
 
 void MainObject::render_ammo_main()
 {
-    for (int i = 0; i < p_bullet_list_.size(); i++)
+    if (p_bullet_list_.size() > 0)
     {
-        std::cout << "Come here" << std::endl;
-        std::vector<AmmoObject *> BULLET;
-        AmmoObject *p_bullet = BULLET.at(i);
-        if (p_bullet != NULL)
+        for (int i = 0; i < p_bullet_list_.size(); i++)
         {
-            if (p_bullet->Get_Can_Move() == true)
+            // std::cout << "Come here" << std::endl;
+            std::vector<AmmoObject *> BULLET = p_bullet_list_;
+            AmmoObject *p_bullet = BULLET.at(i);
+            if (p_bullet != NULL)
             {
-                p_bullet->Handle_Input_Action_BTU(SCREEN_WIDTH, SCREEN_HEIGHT);
-                p_bullet->Render();
-            }
-            else
-            {
-                if (p_bullet != NULL)
+                if (p_bullet->Get_Can_Move() == true)
                 {
-                    BULLET.erase(BULLET.begin() + i);
+                    p_bullet->Handle_Input_Action_BTU(SCREEN_WIDTH, SCREEN_HEIGHT);
+                    p_bullet->Render();
+                }
+                else
+                {
+                    if (p_bullet != NULL)
+                        BULLET.erase(BULLET.begin() + i);
                     p_bullet_list_ = BULLET;
                 }
             }

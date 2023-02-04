@@ -2,6 +2,15 @@
 #define COMMON_FUNC_H
 #pragma once
 
+#define NONE 1
+#define ION 2
+#define DOUBLE_ION 3
+#define LASER 4
+
+#define LASER_WIDTH 12
+#define LASER_HEIGHT 12
+#define ION_WIDTH 12
+#define ION_HEIGHT 12
 #include <iostream>
 #include <string>
 #include <vector>
@@ -16,15 +25,24 @@
 #include <SDL2/SDL_audio.h>
 #include <SDL2/SDL_ttf.h>
 
-const int MAGIC_NUMBER = 100;
+//const int MAGIC_NUMBER = 100;
+ 
+Uint32 MAIN_OBJECT_startTicks = 0;
+Uint32 MAIN_OBJECT_spriteIndex = 0;
+Uint32 MAIN_OBJECT_spritetime= 100;
+const int MAIN_OBJECT_NUMS_FRAME = 4;
 
 const int MAINOBJECT_WIDTH = 200;
 const int MAINOBJECT_HEIGHT = 200;
 const int MAINOBJECT_VEL = 10;
 
+static const int PRESENT_VEL = 3;
+static const int PRESENT_SPIN_VEL = 5;
 
 const int THREAT_OBJECT_WIDTH = 400;
 const int THREAT_OBJECT_HEIGHT = 400;
+
+const int LASER_VEL = 12;
 
 const int SCREEN_WIDTH = 1920;
 const int SCREEN_HEIGHT = 1080;
@@ -35,15 +53,15 @@ const int COLOR_KEY_B = 180;
 
 const Uint64 FrameStart = SDL_GetTicks64();
 const int frameTime = SDL_GetTicks64() - FrameStart;
-const int FPS = 60;
+const int FPS = 30;
 const int frameDelay = 1000 / FPS;
 
-static SDL_Window *window = SDL_CreateWindow("Welcome to my first game",
+static SDL_Window *window = SDL_CreateWindow("Chicken invaders",
         SDL_WINDOWPOS_UNDEFINED, 
         SDL_WINDOWPOS_UNDEFINED, 
         SCREEN_WIDTH, 
         SCREEN_HEIGHT,
-        SDL_WINDOW_SHOWN);
+        SDL_WINDOW_RESIZABLE);
 static void FramePerSecond()
 {
     if (frameDelay > FrameStart)
@@ -51,16 +69,7 @@ static void FramePerSecond()
         SDL_Delay(frameDelay - FrameStart);
     }
 }
-static SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+static SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 static SDL_Event event;
-
-enum Input 
-{
-    LEFT = 0,
-    RIGHT = 1,
-    UP = 2,
-    DOWN = 3,
-    NONE = 4
-};
 
 #endif
