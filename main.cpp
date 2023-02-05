@@ -2,6 +2,7 @@
 #include "MainObject.h"
 #include "BaseObject.h"
 #include "Present.h"
+#include "eggs.h"
 bool InitData()
 {
     bool success = true;
@@ -33,6 +34,7 @@ Present *g_present = new Present();
 
 MainObject *g_player = new MainObject();
 
+
 int main(int argc, char *argv[])
 {
     if (!InitData())
@@ -57,6 +59,9 @@ int main(int argc, char *argv[])
     g_player->set_height_frame(MAINOBJECT_HEIGHT);
     // setting init position
     g_player->SetRect(SCREEN_WIDTH/2, 600);
+    
+    
+    
     bool isRuning = true;
     int bkgn_y = 0;
     int count = 0;

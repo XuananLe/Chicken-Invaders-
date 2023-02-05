@@ -1,16 +1,6 @@
 #ifndef COMMON_FUNC_H
 #define COMMON_FUNC_H
 #pragma once
-
-#define NONE 1
-#define ION 2
-#define DOUBLE_ION 3
-#define LASER 4
-
-#define LASER_WIDTH 12
-#define LASER_HEIGHT 12
-#define ION_WIDTH 12
-#define ION_HEIGHT 12
 #include <iostream>
 #include <string>
 #include <vector>
@@ -24,6 +14,18 @@
 #include <SDL2/SDL_mixer.h>
 #include <SDL2/SDL_audio.h>
 #include <SDL2/SDL_ttf.h>
+
+
+#define NONE 1
+#define ION 2
+#define DOUBLE_ION 3
+#define LASER 4
+
+#define LASER_WIDTH 12
+#define LASER_HEIGHT 12
+#define ION_WIDTH 12
+#define ION_HEIGHT 12
+
 
 //const int MAGIC_NUMBER = 100;
  
@@ -71,5 +73,29 @@ static void FramePerSecond()
 }
 static SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 static SDL_Event event;
+
+SDL_Texture* Load_IMG(const char* file)
+{
+    SDL_Texture* newTexture = NULL;
+    SDL_Surface* loadedSurface = IMG_Load(file);
+    if (loadedSurface == NULL)
+    {
+        std::cout << "Unable to load image Common func " << file << "! SDL_image Error: " << IMG_GetError() << std::endl;
+        exit(0);
+    }
+    else
+    {
+        SDL_SetColorKey(loadedSurface, SDL_TRUE, SDL_MapRGB(loadedSurface->format, COLOR_KEY_R, COLOR_KEY_G, COLOR_KEY_B));
+        newTexture = SDL_CreateTextureFromSurface(renderer, loadedSurface);
+        if (newTexture == NULL)
+        {
+            std::cout << "Unable to create texture from Common Func" << file << "! SDL Error: " << SDL_GetError() << std::endl;
+            exit(0);
+        }
+        SDL_FreeSurface(loadedSurface);
+    }
+    return newTexture;
+}
+
 
 #endif

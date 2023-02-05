@@ -42,7 +42,7 @@ protected:
     // input type
     // Input input_type_;
     // luu frame
-    int frame_;
+    //int frame_;
     // luu trang thai
     int status_;
 
@@ -76,7 +76,7 @@ MainObject::MainObject()
     width_frame = 0;
     height_frame = 0;
 
-    frame_ = 0;
+    //frame_ = 0;
     status_ = -1;
     p_bullet_list_.clear();
 }

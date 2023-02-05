@@ -1,36 +1,48 @@
-#include <SFML/Window.hpp>
+//#include <SFML/Window.hpp>
 #include <iostream>
+//#include "eggs.h"
 #include <SFML/Config.hpp>
 #include <SFML/Graphics.hpp>
 #include "CommonFunc.h"
 #include "BaseObject.h"
 #include "MainObject.h"
 #include "Present.h"
-int main(int argc, char*argv[])
-{
-    BaseObject* base = new BaseObject();
-    base->LoadIMG("Assets/image/background(2).jpg");
-    BaseObject* something = new BaseObject();
-    something->LoadIMG("Assets/image/gift.png");
-    something->set_width_height(100, 100);
-    something->Set_Rect(100, 0);
-    int count = 0;
+#include "Chicken.h"
 
-    bool isRunning = true;
-    while(isRunning)
+int main(int argc, char *argv[])
+{
+    BaseObject* g_background = new BaseObject();
+    Eggs * eggs = new Eggs();
+    eggs->set_width_height(32,41);
+    eggs->set_rect_pos(100,100);
+    eggs->set_is_broken(false);
+
+    Chicken* GA = new Chicken(1);
+    GA->init_egg();
+    
+    g_background->LoadIMG("Assets/image/background(2).jpg");
+    g_background->set_width_height(SCREEN_WIDTH, SCREEN_HEIGHT);
+    g_background->Set_Rect(0,0,SCREEN_WIDTH, SCREEN_HEIGHT);
+    
+
+    bool isRuninng = true;
+    while(isRuninng)
     {
         FramePerSecond();
         while(SDL_PollEvent(&event))
         {
-            switch(event.type)
+            if(event.type == SDL_QUIT)
             {
-                case SDL_QUIT:
-                    isRunning = false;
-                    break;
+                isRuninng = false;
             }
         }
-        base->Render();
-        something->Render(count);
+
+        //std::cout << eggs->get_rect().x << " " << eggs->get_rect().y << std::endl;
+        g_background->Render();
+        GA->moving_LTR(3);
+        GA->handle_and_render_egg(1);
+        GA->render();
+        std::cout << GA->get_eggs_list().size() << std::endl;
         SDL_RenderPresent(renderer);
-    }    
+    }
 }
