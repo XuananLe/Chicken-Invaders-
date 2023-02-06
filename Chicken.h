@@ -61,7 +61,6 @@ bool just_dead;
 };
 Chicken::Chicken()
 {
-    eggs_list.clear();
     Rect_.x = 0;
     Rect_.y = 0;
     Rect_.w = 0;

@@ -36,13 +36,6 @@ int main(int argc, char *argv[])
                 isRuninng = false;
             }
         }
-
-        //std::cout << eggs->get_rect().x << " " << eggs->get_rect().y << std::endl;
-        g_background->Render();
-        GA->moving_LTR(3);
-        GA->handle_and_render_egg(1);
-        GA->render();
-        std::cout << GA->get_eggs_list().size() << std::endl;
         SDL_RenderPresent(renderer);
     }
 }

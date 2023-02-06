@@ -3,6 +3,7 @@
 #include "BaseObject.h"
 #include "Present.h"
 #include "eggs.h"
+#include <emscripten.h>
 bool InitData()
 {
     bool success = true;
