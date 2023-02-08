@@ -51,7 +51,7 @@ public:
     {
         if(is_broken == false) rect_.y += egg_speed;
         // WARNING MAGIC NUMBER
-        if (rect_.y >= 1000 - 50)
+        if (rect_.y >= 1000 + 31)
         {
             is_broken = true;
         }
@@ -66,6 +66,8 @@ public:
         }
         else
         {
+            rect_.w = 32;
+            rect_.h = 41;
             SDL_RenderCopy(renderer, fine_egg, NULL, &rect_);
         }
     }

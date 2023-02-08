@@ -36,6 +36,8 @@ int main(int argc, char *argv[])
                 isRuninng = false;
             }
         }
+        g_background->Render();
+        
         SDL_RenderPresent(renderer);
     }
 }

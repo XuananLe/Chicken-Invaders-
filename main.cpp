@@ -2,8 +2,10 @@
 #include "MainObject.h"
 #include "BaseObject.h"
 #include "Present.h"
+#include "Chicken.h"
 #include "eggs.h"
-#include <emscripten.h>
+
+//#include <emscripten.h>
 bool InitData()
 {
     bool success = true;
@@ -35,18 +37,35 @@ Present *g_present = new Present();
 
 MainObject *g_player = new MainObject();
 
+Eggs* eggs = new Eggs();
+
+Chicken* chicken = new Chicken[NUM_THREAT];
 
 int main(int argc, char *argv[])
 {
+    srand(time(NULL));
     if (!InitData())
         return -1;
     SDL_Init(SDL_INIT_VIDEO);
     SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "best");
+
+    int x_pos = 100;
+    for(int i = 0; i < NUM_THREAT; i++)
+    {
+        chicken[i].set_rect(x_pos, 0);
+        x_pos += 100;
+    }
+
+
+    for(int i = 0; i < NUM_THREAT; i++)
+    {
+        chicken[i].init_ammo(3);
+        //std::cout << chicken[i].get_eggs_list().size() << std::endl;
+    }
     g_background->LoadIMG("Assets/image/background(2).jpg");
     
     // g_present init
     g_present->LoadIMG("Assets/image/AtomicPower.png");
-    //std::cout << g_present->GetRect().x << "\t" << g_present->GetRect().y << "\t" << g_present->GetRect().w << "\t" << g_present->GetRect().h << "\t" << std::endl;
     g_present->set_width_height(50, 50);
     g_present->Set_Rect(100,0);
     g_present->Set_Can_Move(true);
@@ -61,8 +80,9 @@ int main(int argc, char *argv[])
     // setting init position
     g_player->SetRect(SCREEN_WIDTH/2, 600);
     
-    
-    
+    eggs->set_is_broken(false);
+    eggs->set_rect_pos(100, 100);
+
     bool isRuning = true;
     int bkgn_y = 0;
     int count = 0;
@@ -70,7 +90,7 @@ int main(int argc, char *argv[])
     {
         // make the background moving
         // count++;
-        // std::cout << count << "\n";
+        //std::cout << count << "\n";
         //FramePerSecond();
         //std::cout << g_present->GetRect().x << " " << g_present->GetRect().y << std::endl;
         // khien background di chuyen
@@ -100,11 +120,22 @@ int main(int argc, char *argv[])
             }
             g_player->HandleInputAction(event);
         }
-        
+        //std::cout << eggs->get_is_broken() << std::endl; 
+        for(int i = 0; i < NUM_THREAT; i++)
+        {
+            //chicken[i].moving_LTR(1);
+            chicken[i].render();
+            chicken[i].render_ammo(SCREEN_WIDTH,SCREEN_HEIGHT);
+        }
+        // eggs->handle_move(SCREEN_WIDTH, SCREEN_HEIGHT);
+        // eggs->render();
+        // std::cout << eggs->get_rect().x << ' ' << eggs->get_rect().y << std::endl;
+        // //std::cout << eggs->get_rect().x << " " << eggs->get_rect().y << std::endl;
         g_present->Move();
         g_present->Render();
         //std::cout << g_present->GetRect().x << " " << g_present->GetRect().y << std::endl;
         g_player->Show();
+        g_player->process_collision(chicken);
         g_player->render_ammo_main();
         SDL_RenderPresent(renderer);
     }

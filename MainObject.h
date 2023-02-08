@@ -1,5 +1,7 @@
 #include "CommonFunc.h"
 #include "BaseObject.h"
+#include "Chicken.h"
+#include "eggs.h"
 #include "AmmoObject.hpp"
 #ifndef MAINOBJECT_H_
 #define MAINOBJECT_H_
@@ -13,6 +15,7 @@ public:
     bool LoadIMG(const char *file_path);
     // SHOW THEO DANG FRAME CHU KHONG CHI RENDER COPY
     void Show();
+
     void HandleInputAction(SDL_Event event);
 
     // xu li animation
@@ -29,6 +32,33 @@ public:
     void set_bullet_list(std::vector<AmmoObject *> bullet_list) { p_bullet_list_ = bullet_list; }
     std::vector<AmmoObject *> get_bullet_list() const { return p_bullet_list_; }
 
+    void process_collision(Chicken *chicken_list)
+    {
+        for (int i = 0; i < p_bullet_list_.size(); i++)
+        {
+            AmmoObject *ammo = p_bullet_list_.at(i);
+            for (int j = 0; j < NUM_THREAT; j++)
+            {
+                Chicken *chicken = &chicken_list[j];
+                if (chicken != NULL)
+                {
+                    if (chicken->get_is_dead() == false)
+                    {
+                        if (CheckCollision(ammo->GetRect(), chicken->get_rect()))
+                        {
+                            std::vector<Eggs *> eggs_list = chicken->get_eggs_list();
+                            eggs_list.clear();
+                            chicken->set_eggs_list(eggs_list);
+                            chicken->set_is_dead(true);
+                            chicken->render();
+                            ammo->Set_Can_Move(false);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
 protected:
     int x_pos;
     int y_pos;
@@ -42,7 +72,7 @@ protected:
     // input type
     // Input input_type_;
     // luu frame
-    //int frame_;
+    // int frame_;
     // luu trang thai
     int status_;
 
@@ -76,7 +106,7 @@ MainObject::MainObject()
     width_frame = 0;
     height_frame = 0;
 
-    //frame_ = 0;
+    // frame_ = 0;
     status_ = -1;
     p_bullet_list_.clear();
 }
@@ -85,7 +115,7 @@ void MainObject::set_clips()
 {
     if (width_frame >= 0 && height_frame >= 0)
     {
-        for(int i = 0; i < MAIN_OBJECT_NUMS_FRAME; i++)
+        for (int i = 0; i < MAIN_OBJECT_NUMS_FRAME; i++)
         {
             frame_clip_[i].x = i * width_frame;
             frame_clip_[i].y = 0;
@@ -106,7 +136,7 @@ void MainObject::Show()
     SDL_Rect destRect = {rect_.x, rect_.y, width_frame, height_frame};
 
     // Render the current sprite
-    SDL_RenderCopy(renderer,p_object_, &frame_clip_[MAIN_OBJECT_spriteIndex], &destRect);
+    SDL_RenderCopy(renderer, p_object_, &frame_clip_[MAIN_OBJECT_spriteIndex], &destRect);
 }
 
 void MainObject::HandleInputAction(SDL_Event event)
@@ -132,7 +162,6 @@ void MainObject::HandleInputAction(SDL_Event event)
     }
     else if (event.type == SDL_KEYDOWN)
     {
-        
     }
 }
 
@@ -162,4 +191,5 @@ void MainObject::render_ammo_main()
         }
     }
 }
+
 #endif

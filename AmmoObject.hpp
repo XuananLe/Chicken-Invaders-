@@ -15,6 +15,7 @@ public:
     AmmoObject();
     ~AmmoObject();
 
+
     void Set_AMMO_VEL(const int &AMMO_VEL) { this->AMMO_VEL = AMMO_VEL; }
     int Get_AMMO_VEL() const { return AMMO_VEL; }
 
