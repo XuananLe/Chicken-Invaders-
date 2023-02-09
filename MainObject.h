@@ -47,8 +47,7 @@ public:
                         if (CheckCollision(ammo->GetRect(), chicken->get_rect()))
                         {
                             std::vector<Eggs *> eggs_list = chicken->get_eggs_list();
-                            eggs_list.clear();
-                            std::cout << eggs_list.size() << "2131231" << std::endl;
+                            eggs_list.clear();  
                             chicken->set_eggs_list(eggs_list);
                             chicken->set_is_dead(true);
                             ammo->Set_Can_Move(false);

@@ -2,6 +2,10 @@
 #define EGGS_H
 #include "CommonFunc.h"
 #include "BaseObject.h"
+#define EGGS_WIDTH 32
+#define EGGS_HEIGHT 41
+#define EGGS_BROKEN_WIDTH 76
+#define EGGS_BROKEN_HEIGHT 57
 class Eggs
 {
 protected:

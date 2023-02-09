@@ -11,6 +11,11 @@ Chicken()
 {
     is_dead = false;
     chicken = Load_IMG("Assets/image/chicken1.png");
+    chicken_wing = Load_IMG("Assets/image/meat.png");
+    wing_rect.x = rect_.x;
+    wing_rect.y = 0;
+    wing_rect.w = 59;
+    wing_rect.h = 84;
     rect_.x = rand() % SCREEN_WIDTH + CHICKEN_WIDTH;
     rect_.y = 0;
     rect_.w = CHICKEN_WIDTH;
@@ -23,6 +28,12 @@ SDL_Rect get_rect() const {return rect_;}
 void set_is_dead(bool dead){is_dead = dead;}
 bool get_is_dead() const {return is_dead;}
 
+SDL_Texture* get_wing_texture() const {return chicken_wing;}
+void set_wing_rect(const int &x, const int&y)
+{
+    rect_.x = x;
+    rect_.y = y;
+}
 SDL_Rect get_wing_rect() const {return wing_rect;}
 
 void moving_LTR(const int& VEL)
@@ -48,7 +59,9 @@ void render()
         wing_rect.w = 59;
         wing_rect.h = 84;
         wing_rect.x = rect_.x;
+        if(wing_rect.y + wing_rect.h <= SCREEN_HEIGHT)
         wing_rect.y += wing_fall;
+        std::cout << "Chicken.h " << wing_rect.x << " " << wing_rect.y << std::endl;
         SDL_RenderCopy(renderer, chicken_wing, NULL, &wing_rect);
     }
 }
