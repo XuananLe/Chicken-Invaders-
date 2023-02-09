@@ -5,6 +5,8 @@
 #include "Chicken.h"
 #include "eggs.h"
 
+static int game_level;
+static int player_level;
 //#include <emscripten.h>
 bool InitData()
 {
@@ -55,8 +57,6 @@ int main(int argc, char *argv[])
         chicken[i].set_rect(x_pos, 0);
         x_pos += 100;
     }
-
-
     for(int i = 0; i < NUM_THREAT; i++)
     {
         chicken[i].init_ammo(3);
@@ -91,7 +91,7 @@ int main(int argc, char *argv[])
         // make the background moving
         // count++;
         //std::cout << count << "\n";
-        //FramePerSecond();
+        FramePerSecond();
         //std::cout << g_present->GetRect().x << " " << g_present->GetRect().y << std::endl;
         // khien background di chuyen
         SDL_Rect renderquad = {0, bkgn_y, SCREEN_WIDTH, SCREEN_HEIGHT};
@@ -123,9 +123,13 @@ int main(int argc, char *argv[])
         //std::cout << eggs->get_is_broken() << std::endl; 
         for(int i = 0; i < NUM_THREAT; i++)
         {
-            //chicken[i].moving_LTR(1);
+            if(chicken[i].get_is_dead() == false)
+            {
+                chicken[i].render_ammo(SCREEN_WIDTH, SCREEN_HEIGHT);
+                chicken[i].moving_LTR(1);
+            }
             chicken[i].render();
-            chicken[i].render_ammo(SCREEN_WIDTH,SCREEN_HEIGHT);
+            //std::cout << chicken[i].get_wing_rect().x << ' ' << chicken[i].get_wing_rect().y << std::endl;
         }
         // eggs->handle_move(SCREEN_WIDTH, SCREEN_HEIGHT);
         // eggs->render();

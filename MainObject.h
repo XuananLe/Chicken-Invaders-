@@ -48,9 +48,9 @@ public:
                         {
                             std::vector<Eggs *> eggs_list = chicken->get_eggs_list();
                             eggs_list.clear();
+                            std::cout << eggs_list.size() << "2131231" << std::endl;
                             chicken->set_eggs_list(eggs_list);
                             chicken->set_is_dead(true);
-                            chicken->render();
                             ammo->Set_Can_Move(false);
                         }
                     }

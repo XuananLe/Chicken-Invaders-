@@ -23,6 +23,7 @@ SDL_Rect get_rect() const {return rect_;}
 void set_is_dead(bool dead){is_dead = dead;}
 bool get_is_dead() const {return is_dead;}
 
+SDL_Rect get_wing_rect() const {return wing_rect;}
 
 void moving_LTR(const int& VEL)
 {
