@@ -53,13 +53,12 @@ int main(int argc, char *argv[])
     int x_pos = 100;
     for (int i = 0; i < NUM_THREAT; i++)
     {
-        chicken[i].set_rect(x_pos, 0);
+        chicken[i].set_rect(x_pos, 100);
         x_pos += 100;
     }
     for (int i = 0; i < NUM_THREAT; i++)
     {
         chicken[i].init_ammo(3);
-        // std::cout << chicken[i].get_eggs_list().size() << std::endl;
     }
     g_background->LoadIMG("Assets/image/background(2).jpg");
 
@@ -117,7 +116,7 @@ int main(int argc, char *argv[])
             }
             chicken[i].render();
         }
-
+        std::cout << chicken[0].get_eggs_list().size() << std::endl;
         g_player->Show();
         g_player->process_collision(chicken);
         g_player->render_ammo_main();
