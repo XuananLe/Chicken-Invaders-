@@ -11,7 +11,7 @@ Present *g_present = new Present();
 
 MainObject *g_player = new MainObject();
 
-Eggs *eggs = new Eggs();
+Eggs *eggs = new Eggs[1000];
 
 Chicken *chicken = new Chicken[NUM_THREAT];
 
@@ -44,6 +44,8 @@ bool InitData()
 
 int main(int argc, char *argv[])
 {
+    
+
     srand(time(NULL));
     if (!InitData())
         return -1;
@@ -61,12 +63,6 @@ int main(int argc, char *argv[])
         chicken[i].init_ammo(3);
     }
     g_background->LoadIMG("Assets/image/background(2).jpg");
-
-    // g_present init
-    g_present->LoadIMG("Assets/image/AtomicPower.png");
-    g_present->set_width_height(50, 50);
-    g_present->Set_Rect(100, 0);
-    g_present->Set_Can_Move(true);
 
     g_player->LoadIMG("Assets/image/ship1.png");
     g_player->SetRect(MAINOBJECT_WIDTH, MAINOBJECT_HEIGHT);
@@ -88,6 +84,8 @@ int main(int argc, char *argv[])
         bkgn_y += 1;
         if (bkgn_y >= SCREEN_HEIGHT)
             bkgn_y = 0;
+
+        //std::cout << chicken[0].get_eggs_list().at(1)->get_rect().y << std::endl; 
 
         while (SDL_PollEvent(&event) != 0)
         {
@@ -111,12 +109,13 @@ int main(int argc, char *argv[])
         {
             if (chicken[i].get_is_dead() == false)
             {
-                chicken[i].moving_LTR(1);
+                //chicken[i].moving_LTR(1);
                 chicken[i].render_ammo(SCREEN_WIDTH, SCREEN_HEIGHT);
             }
             chicken[i].render();
         }
-        std::cout << chicken[0].get_eggs_list().size() << std::endl;
+        
+        //std::cout << chicken[0].get_eggs_list().size() << std::endl;
         g_player->Show();
         g_player->process_collision(chicken);
         g_player->render_ammo_main();

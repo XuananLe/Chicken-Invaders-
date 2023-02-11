@@ -67,12 +67,6 @@ protected:
     int width_frame;
     int height_frame;
     SDL_Rect frame_clip_[MAIN_OBJECT_NUMS_FRAME];
-
-    // input type
-    // Input input_type_;
-    // luu frame
-    // int frame_;
-    // luu trang thai
     int status_;
 
     std::vector<AmmoObject *> p_bullet_list_;
@@ -86,12 +80,8 @@ bool MainObject::LoadIMG(const char *file_path)
         // chieu rong cua fram e
         // rect_.w la kich co tam anh load vao
         // chia cho 4 vi co 4 frame
-        std::cout << "rect_.w: " << rect_.w << std::endl;
-        std::cout << "rect_.h: " << rect_.h << std::endl;
         width_frame = rect_.w / MAIN_OBJECT_NUMS_FRAME;
         height_frame = rect_.h;
-        std::cout << "width_frame: " << width_frame << std::endl;
-        std::cout << "height_frame: " << height_frame << std::endl;
     }
     return ret;
 }
