@@ -29,7 +29,7 @@
 
 Uint32 MAIN_OBJECT_startTicks = 0;
 Uint32 MAIN_OBJECT_spriteIndex = 0;
-Uint32 MAIN_OBJECT_spritetime = 100;
+Uint32 MAIN_OBJECT_spritetime = 50;
 const int MAIN_OBJECT_NUMS_FRAME = 4;
 
 const int MAINOBJECT_WIDTH = 200;

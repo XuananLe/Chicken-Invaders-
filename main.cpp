@@ -55,6 +55,7 @@ int main(int argc, char *argv[])
     int x_pos = 100;
     for (int i = 0; i < NUM_THREAT; i++)
     {
+        chicken[i].set_clips();
         chicken[i].set_rect(x_pos, 100);
         x_pos += 100;
     }
@@ -109,10 +110,10 @@ int main(int argc, char *argv[])
         {
             if (chicken[i].get_is_dead() == false)
             {
-                //chicken[i].moving_LTR(1);
+                chicken[i].moving_LTR(1);
                 chicken[i].render_ammo(SCREEN_WIDTH, SCREEN_HEIGHT);
             }
-            chicken[i].render();
+            chicken[i].show();
         }
         
         //std::cout << chicken[0].get_eggs_list().size() << std::endl;

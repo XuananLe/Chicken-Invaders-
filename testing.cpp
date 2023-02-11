@@ -12,18 +12,14 @@
 int main(int argc, char *argv[])
 {
     BaseObject* g_background = new BaseObject();
-    Eggs * eggs = new Eggs();
-    eggs->set_width_height(32,41);
-    eggs->set_rect_pos(100,100);
-    eggs->set_is_broken(false);
-
-    Chicken* GA = new Chicken(1);
-    GA->init_egg();
+    
     
     g_background->LoadIMG("Assets/image/background(2).jpg");
     g_background->set_width_height(SCREEN_WIDTH, SCREEN_HEIGHT);
     g_background->Set_Rect(0,0,SCREEN_WIDTH, SCREEN_HEIGHT);
     
+    Chicken *ga = new Chicken();
+    ga->set_clips();
 
     bool isRuninng = true;
     while(isRuninng)
@@ -37,7 +33,7 @@ int main(int argc, char *argv[])
             }
         }
         g_background->Render();
-        
+        ga->show();
         SDL_RenderPresent(renderer);
     }
 }

@@ -7,19 +7,29 @@
 
 Uint32 CHICKEN_OBJECT_startTicks = 0;
 Uint32 CHICKEN_OBJECT_spriteIndex = 0;
-Uint32 CHICKEN_OBJECT_spritetime = 100;
+Uint32 CHICKEN_OBJECT_spritetime = 50;
 const int CHICKEN_OBJECT_NUMS_FRAME = 4;
 const int WING_WIDTH = 59;
 const int WING_HEIGHT = 84;
 
 class Chicken
 {
+protected:
+    bool is_dead;
+    std::vector<Eggs *> eggs_list;
+    SDL_Texture *chicken = NULL;
+    SDL_Texture *chicken_wing = Load_IMG("Assets/image/meat.png");
+    SDL_Rect wing_rect;
+    SDL_Rect rect_;
+    SDL_Rect frame_clip[CHICKEN_OBJECT_NUMS_FRAME];
+
 public:
     Chicken()
     {
         is_dead = false;
-        chicken = Load_IMG("Assets/image/chicken1.png");
+        chicken = Load_IMG("Assets/image/chikin.png");
         chicken_wing = Load_IMG("Assets/image/meat.png");
+
         wing_rect.x = rect_.x;
         wing_rect.y = rect_.y;
         wing_rect.w = 59;
@@ -32,9 +42,9 @@ public:
 
     void set_clips()
     {
-        for(int i = 0; i < CHICKEN_OBJECT_NUMS_FRAME; i++)
+        for (int i = 0; i < CHICKEN_OBJECT_NUMS_FRAME; i++)
         {
-            frame_clip[i].x = i * CHICKEN_WIDTH; 
+            frame_clip[i].x = i * CHICKEN_WIDTH;
             frame_clip[i].y = 0;
             frame_clip[i].w = CHICKEN_WIDTH;
             frame_clip[i].h = CHICKEN_HEIGHT;
@@ -46,6 +56,7 @@ public:
         rect_.x = x;
         rect_.y = y;
     }
+
     SDL_Rect get_rect() const { return rect_; }
 
     void set_is_dead(bool dead) { is_dead = dead; }
@@ -57,6 +68,7 @@ public:
         rect_.x = x;
         rect_.y = y;
     }
+
     SDL_Rect get_wing_rect() const { return wing_rect; }
 
     void moving_LTR(const int &VEL)
@@ -71,12 +83,18 @@ public:
         }
     }
 
-    void render()
+    void show()
     {
         if (is_dead == false)
         {
-            SDL_RenderCopy(renderer, chicken, NULL, &rect_);
-            wing_rect.y = rect_.y;
+            Uint32 currentTicks = SDL_GetTicks();
+            if (currentTicks - CHICKEN_OBJECT_startTicks > CHICKEN_OBJECT_spritetime)
+            {
+                CHICKEN_OBJECT_spriteIndex = (CHICKEN_OBJECT_spriteIndex + 1) % 4;
+                CHICKEN_OBJECT_startTicks = currentTicks;
+            }
+            SDL_Rect des_rect = {rect_.x, rect_.y, CHICKEN_WIDTH, CHICKEN_HEIGHT};
+            SDL_RenderCopy(renderer, chicken, &frame_clip[CHICKEN_OBJECT_spriteIndex], &des_rect);
         }
         else
         {
@@ -84,7 +102,7 @@ public:
             wing_rect.h = WING_HEIGHT;
             wing_rect.x = rect_.x;
             if (wing_rect.y + wing_rect.h <= SCREEN_HEIGHT)
-            wing_rect.y += wing_fall;
+                wing_rect.y += wing_fall;
             SDL_RenderCopy(renderer, chicken_wing, NULL, &wing_rect);
         }
     }
@@ -140,6 +158,7 @@ public:
             }
         }
     }
+
     void free()
     {
         if (chicken != NULL)
@@ -156,14 +175,5 @@ public:
             wing_rect.y = 0;
         }
     }
-
-protected:
-    bool is_dead;
-    std::vector<Eggs *> eggs_list;
-    SDL_Texture *chicken = NULL;
-    SDL_Texture *chicken_wing = Load_IMG("Assets/image/meat.png");
-    SDL_Rect wing_rect;
-    SDL_Rect rect_;
-    SDL_Rect frame_clip[CHICKEN_OBJECT_NUMS_FRAME];
 };
 #endif
