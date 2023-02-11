@@ -41,11 +41,16 @@ bool InitData()
     return success;
 }
 
-
 int main(int argc, char *argv[])
 {
+    Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 1024);
     
-
+    
+    Mix_Music *MENU_MUSIC = Mix_LoadMUS("Assets/sound/THEME.mp3");
+    Mix_PlayMusic(MENU_MUSIC, -1);
+    
+    
+    
     srand(time(NULL));
     if (!InitData())
         return -1;
@@ -77,7 +82,7 @@ int main(int argc, char *argv[])
     int count = 0;
     while (isRuning)
     {
-        // make the background moving
+        /// BACKGROUND MOVING  //
         SDL_Rect renderquad = {0, bkgn_y, SCREEN_WIDTH, SCREEN_HEIGHT};
         SDL_RenderCopy(renderer, g_background->GetObject(), NULL, &renderquad);
         renderquad = {0, bkgn_y - SCREEN_HEIGHT, SCREEN_WIDTH, SCREEN_HEIGHT};
@@ -85,8 +90,6 @@ int main(int argc, char *argv[])
         bkgn_y += 1;
         if (bkgn_y >= SCREEN_HEIGHT)
             bkgn_y = 0;
-
-        //std::cout << chicken[0].get_eggs_list().at(1)->get_rect().y << std::endl; 
 
         while (SDL_PollEvent(&event) != 0)
         {
@@ -106,17 +109,17 @@ int main(int argc, char *argv[])
             }
             g_player->HandleInputAction(event);
         }
+
         for (int i = 0; i < NUM_THREAT; i++)
         {
             if (chicken[i].get_is_dead() == false)
             {
-                chicken[i].moving_LTR(1);
+                // chicken[i].moving_LTR(1);
                 chicken[i].render_ammo(SCREEN_WIDTH, SCREEN_HEIGHT);
             }
             chicken[i].show();
         }
-        
-        //std::cout << chicken[0].get_eggs_list().size() << std::endl;
+        Mix_ResumeMusic();
         g_player->Show();
         g_player->process_collision(chicken);
         g_player->render_ammo_main();

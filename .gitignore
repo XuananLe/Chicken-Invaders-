@@ -33,3 +33,7 @@
 
 #vscode
 .vscode/
+
+testing.*
+test.*
+123.*

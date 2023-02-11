@@ -7,7 +7,7 @@
 
 Uint32 CHICKEN_OBJECT_startTicks = 0;
 Uint32 CHICKEN_OBJECT_spriteIndex = 0;
-Uint32 CHICKEN_OBJECT_spritetime = 50;
+const Uint32 CHICKEN_OBJECT_spritetime = 50;
 const int CHICKEN_OBJECT_NUMS_FRAME = 4;
 const int WING_WIDTH = 59;
 const int WING_HEIGHT = 84;
