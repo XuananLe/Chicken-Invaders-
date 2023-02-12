@@ -46,11 +46,11 @@ int main(int argc, char *argv[])
     Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 1024);
     
     
-    Mix_Music *MENU_MUSIC = Mix_LoadMUS("Assets/sound/THEME.mp3");
+    Mix_Music *MENU_MUSIC = Mix_LoadMUS("Assets/sound/MENU_THEME.mp3");
     Mix_PlayMusic(MENU_MUSIC, -1);
     
-    
-    
+    Mix_Chunk *CHICKEN_GOT_HIT = Mix_LoadWAV("Assets/sound/Ci1chickenhit.wav");
+
     srand(time(NULL));
     if (!InitData())
         return -1;
@@ -64,10 +64,12 @@ int main(int argc, char *argv[])
         chicken[i].set_rect(x_pos, 100);
         x_pos += 100;
     }
+
     for (int i = 0; i < NUM_THREAT; i++)
     {
         chicken[i].init_ammo(3);
     }
+
     g_background->LoadIMG("Assets/image/background(2).jpg");
 
     g_player->LoadIMG("Assets/image/ship1.png");
@@ -91,6 +93,8 @@ int main(int argc, char *argv[])
         if (bkgn_y >= SCREEN_HEIGHT)
             bkgn_y = 0;
 
+
+
         while (SDL_PollEvent(&event) != 0)
         {
             if (event.type == SDL_QUIT)
@@ -109,7 +113,6 @@ int main(int argc, char *argv[])
             }
             g_player->HandleInputAction(event);
         }
-
         for (int i = 0; i < NUM_THREAT; i++)
         {
             if (chicken[i].get_is_dead() == false)
@@ -117,9 +120,11 @@ int main(int argc, char *argv[])
                 // chicken[i].moving_LTR(1);
                 chicken[i].render_ammo(SCREEN_WIDTH, SCREEN_HEIGHT);
             }
+            chicken[i].play_sound();
             chicken[i].show();
         }
         Mix_ResumeMusic();
+        //Mix_PlayChannel(-1, CHICKEN_GOT_HIT, 100);
         g_player->Show();
         g_player->process_collision(chicken);
         g_player->render_ammo_main();

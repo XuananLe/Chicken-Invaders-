@@ -107,6 +107,26 @@ public:
         }
     }
 
+    void play_sound()
+    {
+        int loops = 0;
+        if (is_dead == false)
+        {
+            Mix_Chunk *CHICKEN_GOT_HIT = Mix_LoadWAV("Assets/sound/Ci1chickenhit.wav");
+            int chanel = Mix_PlayChannel(-1, CHICKEN_GOT_HIT, loops);
+            int current_ticks = SDL_GetTicks64();
+            const Uint64 time_has_passes = current_ticks + 10000;
+            if(loops < 1)
+            {
+                Mix_PlayChannel(-1, CHICKEN_GOT_HIT, loops);
+            }
+            else Mix_HaltChannel(chanel);
+        }
+        // else
+        // {
+        //     Mix_PlayChannel(-1, CHICKEN_GOT_HIT, 0);
+        // }
+    }
     void set_eggs_list(const std::vector<Eggs *> &eggs_list) { this->eggs_list = eggs_list; }
     std::vector<Eggs *> get_eggs_list() const { return eggs_list; }
 

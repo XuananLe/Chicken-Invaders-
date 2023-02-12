@@ -34,6 +34,6 @@
 #vscode
 .vscode/
 
-testing.*
+testing.cpp
 test.*
 123.*
