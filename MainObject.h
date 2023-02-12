@@ -47,12 +47,34 @@ public:
                         if (CheckCollision(ammo->GetRect(), chicken->get_rect()))
                         {
                             std::vector<Eggs *> eggs_list = chicken->get_eggs_list();
-                            eggs_list.clear();  
+                            eggs_list.clear();
                             chicken->set_eggs_list(eggs_list);
                             chicken->set_is_dead(true);
                             ammo->Set_Can_Move(false);
                         }
                     }
+                }
+            }
+        }
+    }
+
+    void make_sound_when_get_food(const Chicken *chicken_list)
+    {
+        Mix_Chunk *g_sound_get_food = Mix_LoadWAV("Assets/sound/GET_FOOD.wav");
+        for (int i = 0; i < NUM_THREAT; i++)
+        {
+            if (chicken_list[i].get_is_dead() == true)
+            {
+                Uint64 current_ticks = SDL_GetTicks64();
+                if (CheckCollision(chicken_list[i].get_wing_rect(), rect_))
+                {
+                    while (SDL_GetTicks64() - current_ticks < 1000)
+                    {
+                    std::cout << SDL_GetTicks64() << std::endl;
+                    current_ticks = SDL_GetTicks64();
+                    Mix_PlayChannel(-1, g_sound_get_food, 0);
+                    }
+                    Mix_HaltChannel(Mix_PlayChannel(-1, g_sound_get_food, 1));
                 }
             }
         }
@@ -140,6 +162,13 @@ void MainObject::HandleInputAction(SDL_Event event)
     }
     else if (event.type == SDL_MOUSEBUTTONDOWN)
     {
+        Mix_Chunk *p_sound_bullet_ = Mix_LoadWAV("Assets/sound/ION_FIRING.wav");
+        int chanel = Mix_PlayChannel(-1, p_sound_bullet_, 0);
+        if (chanel == -1)
+        {
+            std::cout << " MAINOBJECT.H" << Mix_GetError() << std::endl;
+            exit(0);
+        }
         AmmoObject *p_bullet = new AmmoObject();
         p_bullet->Set_AmmoType(LASER);
         p_bullet->Set_Can_Move(true);

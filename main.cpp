@@ -58,26 +58,27 @@ int main(int argc, char *argv[])
     SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "best");
 
     int x_pos = 100;
+    int ypos = 0;
     for (int i = 0; i < NUM_THREAT; i++)
     {
         chicken[i].set_clips();
-        chicken[i].set_rect(x_pos, 100);
-        x_pos += 100;
+        chicken[i].set_rect(x_pos, 300);
+        x_pos += 200;
     }
 
     for (int i = 0; i < NUM_THREAT; i++)
     {
-        chicken[i].init_ammo(3);
+        chicken[i].init_ammo(1);
     }
 
     g_background->LoadIMG("Assets/image/background(2).jpg");
+
 
     g_player->LoadIMG("Assets/image/ship1.png");
     g_player->SetRect(MAINOBJECT_WIDTH, MAINOBJECT_HEIGHT);
     g_player->set_clips();
     g_player->set_width_frame(MAINOBJECT_WIDTH);
     g_player->set_height_frame(MAINOBJECT_HEIGHT);
-    // g_player->SetRect(SCREEN_WIDTH / 2, 600);
 
     bool isRuning = true;
     int bkgn_y = 0;
@@ -128,6 +129,7 @@ int main(int argc, char *argv[])
         g_player->Show();
         g_player->process_collision(chicken);
         g_player->render_ammo_main();
+        g_player->make_sound_when_get_food(chicken);
 
         SDL_RenderPresent(renderer);
     }

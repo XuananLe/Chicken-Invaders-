@@ -16,6 +16,7 @@ class Chicken
 {
 protected:
     bool is_dead;
+    int CHICKEN_GOT_HIT_LOOPS = 0;
     std::vector<Eggs *> eggs_list;
     SDL_Texture *chicken = NULL;
     SDL_Texture *chicken_wing = Load_IMG("Assets/image/meat.png");
@@ -63,6 +64,7 @@ public:
     bool get_is_dead() const { return is_dead; }
 
     SDL_Texture *get_wing_texture() const { return chicken_wing; }
+    
     void set_wing_rect(const int &x, const int &y)
     {
         rect_.x = x;
@@ -87,6 +89,8 @@ public:
     {
         if (is_dead == false)
         {
+            wing_rect.y = rect_.y;
+            wing_rect.x = rect_.x;
             Uint32 currentTicks = SDL_GetTicks();
             if (currentTicks - CHICKEN_OBJECT_startTicks > CHICKEN_OBJECT_spritetime)
             {
@@ -100,7 +104,6 @@ public:
         {
             wing_rect.w = WING_WIDTH;
             wing_rect.h = WING_HEIGHT;
-            wing_rect.x = rect_.x;
             if (wing_rect.y + wing_rect.h <= SCREEN_HEIGHT)
                 wing_rect.y += wing_fall;
             SDL_RenderCopy(renderer, chicken_wing, NULL, &wing_rect);
@@ -109,24 +112,27 @@ public:
 
     void play_sound()
     {
-        int loops = 0;
-        if (is_dead == false)
+        if (is_dead == true)
         {
             Mix_Chunk *CHICKEN_GOT_HIT = Mix_LoadWAV("Assets/sound/Ci1chickenhit.wav");
-            int chanel = Mix_PlayChannel(-1, CHICKEN_GOT_HIT, loops);
-            int current_ticks = SDL_GetTicks64();
-            const Uint64 time_has_passes = current_ticks + 10000;
-            if(loops < 1)
+            int chanel = Mix_PlayChannel(-1, CHICKEN_GOT_HIT, CHICKEN_GOT_HIT_LOOPS);
+            if(CHICKEN_GOT_HIT_LOOPS < 1)
             {
-                Mix_PlayChannel(-1, CHICKEN_GOT_HIT, loops);
+                Mix_PlayChannel(-1, CHICKEN_GOT_HIT, CHICKEN_GOT_HIT_LOOPS);
+                CHICKEN_GOT_HIT_LOOPS += 1;
             }
-            else Mix_HaltChannel(chanel);
+            else 
+            {
+                Mix_HaltChannel(chanel);
+                return;
+            }
         }
         // else
         // {
         //     Mix_PlayChannel(-1, CHICKEN_GOT_HIT, 0);
         // }
     }
+    
     void set_eggs_list(const std::vector<Eggs *> &eggs_list) { this->eggs_list = eggs_list; }
     std::vector<Eggs *> get_eggs_list() const { return eggs_list; }
 

@@ -41,7 +41,7 @@ static const int PRESENT_SPIN_VEL = 5;
 
 const int THREAT_OBJECT_WIDTH = 400;
 const int THREAT_OBJECT_HEIGHT = 400;
-const int NUM_THREAT = 3;
+const int NUM_THREAT = 4;
 
 const int LASER_VEL = 12;
 

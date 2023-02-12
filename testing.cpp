@@ -62,7 +62,8 @@ int main(int argc, char* argv[]) {
   SDL_FreeSurface(option1Surface);
   option1Surface = NULL;
 
-    option2Texture = SDL_CreateTextureFromSurface(renderer, option2Surface);
+  option2Surface = TTF_RenderText_Solid(font, "Option 2", {255, 255, 255});
+  option2Texture = SDL_CreateTextureFromSurface(renderer, option2Surface);
   SDL_FreeSurface(option2Surface);
   option2Surface = NULL;
   std::cout << option2Rect.x << " " << option2Rect.y << " " << option2Rect.w << " " << option2Rect.h << std::endl;
