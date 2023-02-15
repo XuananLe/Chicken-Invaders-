@@ -50,6 +50,7 @@ public:
                             eggs_list.clear();
                             chicken->set_eggs_list(eggs_list);
                             chicken->set_is_dead(true);
+                            chicken[i].destroy_chicken();
                             ammo->Set_Can_Move(false);
                         }
                     }
@@ -58,23 +59,41 @@ public:
         }
     }
 
-    void make_sound_when_get_food(const Chicken *chicken_list)
+    void make_sound_when_get_food(Chicken *chicken)
     {
-        Mix_Chunk *g_sound_get_food = Mix_LoadWAV("Assets/sound/GET_FOOD.wav");
         for (int i = 0; i < NUM_THREAT; i++)
         {
-            if (chicken_list[i].get_is_dead() == true)
+            if (chicken[i].get_is_dead() == true)
             {
-                Uint64 current_ticks = SDL_GetTicks64();
-                if (CheckCollision(chicken_list[i].get_wing_rect(), rect_))
+                if (CheckCollision(chicken[i].get_wing_rect(), rect_))
                 {
-                    while (SDL_GetTicks64() - current_ticks < 1000)
+                    Mix_Chunk *g_sound_eat = Mix_LoadWAV("Assets/sound/GET_FOOD.wav");
+                    if (g_sound_eat == NULL)
                     {
-                    std::cout << SDL_GetTicks64() << std::endl;
-                    current_ticks = SDL_GetTicks64();
-                    Mix_PlayChannel(-1, g_sound_get_food, 0);
+                        std::cout << "Failed to load sound effect! SDL_mixer Error: " << Mix_GetError() << std::endl;
+                        exit(0);
                     }
-                    Mix_HaltChannel(Mix_PlayChannel(-1, g_sound_get_food, 1));
+                    Mix_PlayChannel(-1, g_sound_eat, 0);
+                    chicken[i].destroy_wing_rect();
+                }
+            }
+        }
+    }
+    void process_if_is_hit_by_an_egg(const Chicken *chicken)
+    {
+        for (int i = 0; i < NUM_THREAT; i++)
+        {
+            if (chicken[i].get_is_dead() == false)
+            {
+                Mix_Chunk* g_sound_hit = Mix_LoadWAV("Assets/sound/HIT.wav");
+                std::vector<Eggs *> eggs_list = chicken[i].get_eggs_list();
+                for (int j = 0; j < eggs_list.size(); j++)
+                {
+                    if (CheckCollision(eggs_list[j]->get_rect(), rect_))
+                    {
+                        eggs_list[j]->set_can_move(false);
+                        eggs_list[j]->destroy_egg();
+                    }
                 }
             }
         }

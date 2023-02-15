@@ -44,11 +44,9 @@ bool InitData()
 int main(int argc, char *argv[])
 {
     Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 1024);
-    
-    
+
     Mix_Music *MENU_MUSIC = Mix_LoadMUS("Assets/sound/MENU_THEME.mp3");
     Mix_PlayMusic(MENU_MUSIC, -1);
-    
     Mix_Chunk *CHICKEN_GOT_HIT = Mix_LoadWAV("Assets/sound/Ci1chickenhit.wav");
 
     srand(time(NULL));
@@ -57,7 +55,7 @@ int main(int argc, char *argv[])
     SDL_Init(SDL_INIT_VIDEO);
     SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "best");
 
-    int x_pos = 100;
+    int x_pos = 0;
     int ypos = 0;
     for (int i = 0; i < NUM_THREAT; i++)
     {
@@ -73,7 +71,6 @@ int main(int argc, char *argv[])
 
     g_background->LoadIMG("Assets/image/background(2).jpg");
 
-
     g_player->LoadIMG("Assets/image/ship1.png");
     g_player->SetRect(MAINOBJECT_WIDTH, MAINOBJECT_HEIGHT);
     g_player->set_clips();
@@ -83,6 +80,7 @@ int main(int argc, char *argv[])
     bool isRuning = true;
     int bkgn_y = 0;
     int count = 0;
+
     while (isRuning)
     {
         /// BACKGROUND MOVING  //
@@ -94,7 +92,7 @@ int main(int argc, char *argv[])
         if (bkgn_y >= SCREEN_HEIGHT)
             bkgn_y = 0;
 
-
+        Mix_ResumeMusic();
 
         while (SDL_PollEvent(&event) != 0)
         {
@@ -116,21 +114,24 @@ int main(int argc, char *argv[])
         }
         for (int i = 0; i < NUM_THREAT; i++)
         {
-            if (chicken[i].get_is_dead() == false)
+            if (chicken[i].get_is_dead() == false && chicken[i].get_eggs_list().size() != 0)
             {
-                // chicken[i].moving_LTR(1);
                 chicken[i].render_ammo(SCREEN_WIDTH, SCREEN_HEIGHT);
             }
+            //cstd::cout << chicken[i].get_eggs_list().size() << std::endl;
             chicken[i].play_sound();
             chicken[i].show();
         }
-        Mix_ResumeMusic();
-        //Mix_PlayChannel(-1, CHICKEN_GOT_HIT, 100);
         g_player->Show();
         g_player->process_collision(chicken);
+        g_player->process_if_is_hit_by_an_egg(chicken);
         g_player->render_ammo_main();
         g_player->make_sound_when_get_food(chicken);
 
         SDL_RenderPresent(renderer);
+    }
+    for (int i = 0; i < NUM_THREAT; i++)
+    {
+        std::cout << chicken[i].get_eggs_list().size() << std::endl;
     }
 }

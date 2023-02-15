@@ -13,17 +13,47 @@ protected:
     // SDL_Rect src_rect;
     double egg_speed;
     bool is_broken;
+    bool can_move;
     int width;
     int height;
     SDL_Texture *fine_egg = NULL;
     SDL_Texture *broken_egg = NULL;
 
 public:
+    void set_can_move(const bool &can_move)
+    {
+        Eggs::can_move = can_move;
+    }
+
+    bool get_can_move() const
+    {
+        return can_move;
+    }
+    void destroy_egg()
+    {
+        if (fine_egg != NULL)
+        {
+            SDL_DestroyTexture(fine_egg);
+            fine_egg = NULL;
+            Eggs::rect_.x = -9999;
+            Eggs::rect_.y = -9999;
+        }
+        if (broken_egg != NULL)
+        {
+            SDL_DestroyTexture(broken_egg);
+            broken_egg = NULL;
+            Eggs::rect_.x = -9999;
+            Eggs::rect_.y = -9999;
+        }
+    }
+
+
     Eggs()
     {
         rect_ = {0, 0, 0, 0};
         // src_rect = {0, 0, 0, 0};
         egg_speed = 5;
+        can_move = true;
         is_broken = false;
         fine_egg = Load_IMG("/home/xuananle/Documents/PROJECT_CHICKEN/Assets/image/egg.png"); 
         broken_egg = Load_IMG("Assets/image/egg2.png");

@@ -25,6 +25,13 @@ protected:
     SDL_Rect frame_clip[CHICKEN_OBJECT_NUMS_FRAME];
 
 public:
+    void re_init_eggs(const int &x_, const int &y_)
+    {
+        Eggs *eggs = new Eggs();
+        eggs->set_rect_pos(x_, y_);
+        eggs_list.push_back(eggs);
+    }
+
     Chicken()
     {
         is_dead = false;
@@ -64,7 +71,7 @@ public:
     bool get_is_dead() const { return is_dead; }
 
     SDL_Texture *get_wing_texture() const { return chicken_wing; }
-    
+
     void set_wing_rect(const int &x, const int &y)
     {
         rect_.x = x;
@@ -116,23 +123,21 @@ public:
         {
             Mix_Chunk *CHICKEN_GOT_HIT = Mix_LoadWAV("Assets/sound/Ci1chickenhit.wav");
             int chanel = Mix_PlayChannel(-1, CHICKEN_GOT_HIT, CHICKEN_GOT_HIT_LOOPS);
-            if(CHICKEN_GOT_HIT_LOOPS < 1)
+            if (CHICKEN_GOT_HIT_LOOPS < 1)
             {
                 Mix_PlayChannel(-1, CHICKEN_GOT_HIT, CHICKEN_GOT_HIT_LOOPS);
                 CHICKEN_GOT_HIT_LOOPS += 1;
             }
-            else 
+            else
             {
                 Mix_HaltChannel(chanel);
                 return;
             }
         }
-        // else
-        // {
-        //     Mix_PlayChannel(-1, CHICKEN_GOT_HIT, 0);
-        // }
     }
-    
+
+
+
     void set_eggs_list(const std::vector<Eggs *> &eggs_list) { this->eggs_list = eggs_list; }
     std::vector<Eggs *> get_eggs_list() const { return eggs_list; }
 
@@ -199,6 +204,26 @@ public:
             wing_rect.w = 59;
             wing_rect.h = 84;
             wing_rect.y = 0;
+        }
+    }
+    void destroy_chicken()
+    {
+        if (chicken != NULL)
+        {
+            SDL_DestroyTexture(chicken);
+            chicken = NULL;
+            rect_.x = -9999;
+            rect_.y = -9999;
+        }
+    }
+    void destroy_wing_rect()
+    {
+        if (chicken_wing != NULL)
+        {
+            SDL_DestroyTexture(chicken_wing);
+            chicken_wing = NULL;
+            wing_rect.x = -9999;
+            wing_rect.y = -9999;
         }
     }
 };
