@@ -118,7 +118,7 @@ int main(int argc, char *argv[])
             {
                 chicken[i].render_ammo(SCREEN_WIDTH, SCREEN_HEIGHT);
             }
-            //cstd::cout << chicken[i].get_eggs_list().size() << std::endl;
+            // cstd::cout << chicken[i].get_eggs_list().size() << std::endl;
             chicken[i].play_sound();
             chicken[i].show();
         }
@@ -129,9 +129,5 @@ int main(int argc, char *argv[])
         g_player->make_sound_when_get_food(chicken);
 
         SDL_RenderPresent(renderer);
-    }
-    for (int i = 0; i < NUM_THREAT; i++)
-    {
-        std::cout << chicken[i].get_eggs_list().size() << std::endl;
     }
 }

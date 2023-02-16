@@ -42,7 +42,7 @@ public:
         wing_rect.y = rect_.y;
         wing_rect.w = 59;
         wing_rect.h = 84;
-        rect_.x = rand() % SCREEN_WIDTH + CHICKEN_WIDTH;
+        rect_.x = 0;
         rect_.y = 0;
         rect_.w = CHICKEN_WIDTH;
         rect_.h = CHICKEN_HEIGHT;
@@ -105,15 +105,38 @@ public:
                 CHICKEN_OBJECT_startTicks = currentTicks;
             }
             SDL_Rect des_rect = {rect_.x, rect_.y, CHICKEN_WIDTH, CHICKEN_HEIGHT};
+            re_init_eggs(rect_.x + 20, rect_.y + 20);
             SDL_RenderCopy(renderer, chicken, &frame_clip[CHICKEN_OBJECT_spriteIndex], &des_rect);
         }
         else
         {
+            std::cout << "DEAD "  << eggs_list.size() << std::endl;
+            if(eggs_list.size() >= 0)
+            {
+            for(int i = 0; i < eggs_list.size(); i++)
+            {
+                std::vector<Eggs*> EGG = eggs_list;
+                if(EGG.at(i)->get_can_move() == true)
+                {
+                    EGG.at(i)->handle_move(SCREEN_WIDTH, SCREEN_HEIGHT);
+                }
+                else if(EGG.at(i)->get_can_move() == false)
+                {
+                    std::cout << i << "LMAO CAN NOT MOVE AF CHICKEN.H" << std::endl;
+                    exit(0);
+                    if(EGG.at(i) != NULL)
+                    {
+                        EGG.erase(EGG.begin() + i);
+                        eggs_list = EGG;
+                    }
+                }
+            }
             wing_rect.w = WING_WIDTH;
             wing_rect.h = WING_HEIGHT;
             if (wing_rect.y + wing_rect.h <= SCREEN_HEIGHT)
                 wing_rect.y += wing_fall;
             SDL_RenderCopy(renderer, chicken_wing, NULL, &wing_rect);
+            }
         }
     }
 

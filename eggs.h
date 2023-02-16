@@ -13,14 +13,14 @@ protected:
     // SDL_Rect src_rect;
     double egg_speed;
     bool is_broken;
-    bool can_move;
-    int width;
-    int height;
+    bool can_move= true;
+    int width = EGGS_WIDTH;
+    int height = EGGS_HEIGHT;
     SDL_Texture *fine_egg = NULL;
     SDL_Texture *broken_egg = NULL;
 
 public:
-    void set_can_move(const bool &can_move)
+        void set_can_move(const bool &can_move)
     {
         Eggs::can_move = can_move;
     }
@@ -35,15 +35,15 @@ public:
         {
             SDL_DestroyTexture(fine_egg);
             fine_egg = NULL;
-            Eggs::rect_.x = -9999;
-            Eggs::rect_.y = -9999;
+            Eggs::rect_.x = 9999;
+            Eggs::rect_.y = 9999;
         }
         if (broken_egg != NULL)
         {
             SDL_DestroyTexture(broken_egg);
             broken_egg = NULL;
-            Eggs::rect_.x = -9999;
-            Eggs::rect_.y = -9999;
+            Eggs::rect_.x = 9999;
+            Eggs::rect_.y = 9999;
         }
     }
 
