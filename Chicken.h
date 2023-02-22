@@ -5,9 +5,10 @@
 #define CHICKEN_WIDTH 127
 #define CHICKEN_HEIGHT 98
 
+
 Uint32 CHICKEN_OBJECT_startTicks = 0;
 Uint32 CHICKEN_OBJECT_spriteIndex = 0;
-const Uint32 CHICKEN_OBJECT_spritetime = 50;
+const Uint32 CHICKEN_OBJECT_spritetime = 100;
 const int CHICKEN_OBJECT_NUMS_FRAME = 4;
 const int WING_WIDTH = 59;
 const int WING_HEIGHT = 84;
@@ -105,38 +106,16 @@ public:
                 CHICKEN_OBJECT_startTicks = currentTicks;
             }
             SDL_Rect des_rect = {rect_.x, rect_.y, CHICKEN_WIDTH, CHICKEN_HEIGHT};
-            re_init_eggs(rect_.x + 20, rect_.y + 20);
+            // re_init_eggs(rect_.x + 20, rect_.y + 20);
             SDL_RenderCopy(renderer, chicken, &frame_clip[CHICKEN_OBJECT_spriteIndex], &des_rect);
         }
         else
         {
-            std::cout << "DEAD "  << eggs_list.size() << std::endl;
-            if(eggs_list.size() >= 0)
-            {
-            for(int i = 0; i < eggs_list.size(); i++)
-            {
-                std::vector<Eggs*> EGG = eggs_list;
-                if(EGG.at(i)->get_can_move() == true)
-                {
-                    EGG.at(i)->handle_move(SCREEN_WIDTH, SCREEN_HEIGHT);
-                }
-                else if(EGG.at(i)->get_can_move() == false)
-                {
-                    std::cout << i << "LMAO CAN NOT MOVE AF CHICKEN.H" << std::endl;
-                    exit(0);
-                    if(EGG.at(i) != NULL)
-                    {
-                        EGG.erase(EGG.begin() + i);
-                        eggs_list = EGG;
-                    }
-                }
-            }
-            wing_rect.w = WING_WIDTH;
-            wing_rect.h = WING_HEIGHT;
-            if (wing_rect.y + wing_rect.h <= SCREEN_HEIGHT)
-                wing_rect.y += wing_fall;
-            SDL_RenderCopy(renderer, chicken_wing, NULL, &wing_rect);
-            }
+        wing_rect.w = WING_WIDTH;
+        wing_rect.h = WING_HEIGHT;
+        if (wing_rect.y + wing_rect.h <= SCREEN_HEIGHT)
+        wing_rect.y += wing_fall;
+        SDL_RenderCopy(renderer, chicken_wing, NULL, &wing_rect);
         }
     }
 
@@ -158,8 +137,6 @@ public:
             }
         }
     }
-
-
 
     void set_eggs_list(const std::vector<Eggs *> &eggs_list) { this->eggs_list = eggs_list; }
     std::vector<Eggs *> get_eggs_list() const { return eggs_list; }
@@ -219,14 +196,14 @@ public:
         {
             SDL_DestroyTexture(chicken);
             chicken = NULL;
-            rect_.x = -9999;
-            rect_.y = -9999;
+            rect_.x = 9999;
+            rect_.y = 9999;
             rect_.w = 0;
             rect_.h = 0;
-            wing_rect.x = 0;
-            wing_rect.w = 59;
-            wing_rect.h = 84;
-            wing_rect.y = 0;
+            wing_rect.x = 9999;
+            wing_rect.w = 0;
+            wing_rect.h = 0;
+            wing_rect.y = 9999;
         }
     }
     void destroy_chicken()
@@ -235,8 +212,8 @@ public:
         {
             SDL_DestroyTexture(chicken);
             chicken = NULL;
-            rect_.x = -9999;
-            rect_.y = -9999;
+            rect_.x = 9999;
+            rect_.y = 9999;
         }
     }
     void destroy_wing_rect()
@@ -245,8 +222,8 @@ public:
         {
             SDL_DestroyTexture(chicken_wing);
             chicken_wing = NULL;
-            wing_rect.x = -9999;
-            wing_rect.y = -9999;
+            wing_rect.x = 9999;
+            wing_rect.y = 9999;
         }
     }
 };

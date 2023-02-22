@@ -43,24 +43,25 @@ bool InitData()
 
 int main(int argc, char *argv[])
 {
-    Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 1024);
+    // INIT_IN_GENERAL
+    if (!InitData()) return -1;
+    SDL_Init(SDL_INIT_VIDEO);
+    SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "best");
 
+    // INIT_AUDIO
+    Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 1024);
     Mix_Music *MENU_MUSIC = Mix_LoadMUS("Assets/sound/MENU_THEME.mp3");
     Mix_PlayMusic(MENU_MUSIC, -1);
     Mix_Chunk *CHICKEN_GOT_HIT = Mix_LoadWAV("Assets/sound/Ci1chickenhit.wav");
 
     srand(time(NULL));
-    if (!InitData())
-        return -1;
-    SDL_Init(SDL_INIT_VIDEO);
-    SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "best");
 
     int x_pos = 0;
     int ypos = 0;
     for (int i = 0; i < NUM_THREAT; i++)
     {
         chicken[i].set_clips();
-        chicken[i].set_rect(x_pos, 300);
+        chicken[i].set_rect(x_pos, 0);
         x_pos += 200;
     }
 
@@ -93,6 +94,8 @@ int main(int argc, char *argv[])
             bkgn_y = 0;
 
         Mix_ResumeMusic();
+        Mix_VolumeMusic(12);
+
 
         while (SDL_PollEvent(&event) != 0)
         {
@@ -114,11 +117,8 @@ int main(int argc, char *argv[])
         }
         for (int i = 0; i < NUM_THREAT; i++)
         {
-            if (chicken[i].get_is_dead() == false && chicken[i].get_eggs_list().size() != 0)
-            {
-                chicken[i].render_ammo(SCREEN_WIDTH, SCREEN_HEIGHT);
-            }
-            // cstd::cout << chicken[i].get_eggs_list().size() << std::endl;
+            
+            chicken[i].render_ammo(SCREEN_WIDTH, SCREEN_HEIGHT);
             chicken[i].play_sound();
             chicken[i].show();
         }
@@ -128,6 +128,8 @@ int main(int argc, char *argv[])
         g_player->render_ammo_main();
         g_player->make_sound_when_get_food(chicken);
 
+
         SDL_RenderPresent(renderer);
+        SDL_RenderClear(renderer);
     }
 }

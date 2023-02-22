@@ -8,6 +8,17 @@
 
 class MainObject : public BaseObject
 {
+protected:
+    int x_pos;
+    int y_pos;
+    int x_val_;
+    int y_val_;
+    // kich co cua frame
+    int width_frame;
+    int height_frame;
+    SDL_Rect frame_clip_[MAIN_OBJECT_NUMS_FRAME];
+    int status_;
+    std::vector<AmmoObject *> p_bullet_list_;
 public:
     MainObject();
     ~MainObject() {}
@@ -46,9 +57,6 @@ public:
                     {
                         if (CheckCollision(ammo->GetRect(), chicken->get_rect()))
                         {
-                            std::vector<Eggs *> eggs_list = chicken->get_eggs_list();
-                            eggs_list.clear();
-                            chicken->set_eggs_list(eggs_list);
                             chicken->set_is_dead(true);
                             chicken[i].destroy_chicken();
                             ammo->Set_Can_Move(false);
@@ -79,18 +87,25 @@ public:
             }
         }
     }
+    
     void process_if_is_hit_by_an_egg(const Chicken *chicken)
     {
         for (int i = 0; i < NUM_THREAT; i++)
         {
             if (chicken[i].get_is_dead() == false)
             {
-                Mix_Chunk* g_sound_hit = Mix_LoadWAV("Assets/sound/HIT.wav");
+                Mix_Chunk* g_sound_hit = Mix_LoadWAV("Assets/sound/player_hit.wav");
                 std::vector<Eggs *> eggs_list = chicken[i].get_eggs_list();
                 for (int j = 0; j < eggs_list.size(); j++)
                 {
-                    if (CheckCollision(eggs_list[j]->get_rect(), rect_))
+                    if (CheckCollision(eggs_list[j]->get_rect(), rect_) == true)
                     {
+                        if (g_sound_hit == NULL)
+                        {
+                            std::cout << "Failed to load sound effect! SDL_mixer Error: " << Mix_GetError() << std::endl;
+                            exit(0);
+                        }
+                        Mix_PlayChannel(-1, g_sound_hit, 1);
                         eggs_list[j]->set_can_move(false);
                         eggs_list[j]->destroy_egg();
                     }
@@ -99,18 +114,6 @@ public:
         }
     }
 
-protected:
-    int x_pos;
-    int y_pos;
-    int x_val_;
-    int y_val_;
-    // kich co cua frame
-    int width_frame;
-    int height_frame;
-    SDL_Rect frame_clip_[MAIN_OBJECT_NUMS_FRAME];
-    int status_;
-
-    std::vector<AmmoObject *> p_bullet_list_;
 };
 
 bool MainObject::LoadIMG(const char *file_path)
@@ -164,7 +167,6 @@ void MainObject::Show()
         MAIN_OBJECT_startTicks = currentTicks;
     }
     SDL_Rect destRect = {rect_.x, rect_.y, width_frame, height_frame};
-
     // Render the current sprite
     SDL_RenderCopy(renderer, p_object_, &frame_clip_[MAIN_OBJECT_spriteIndex], &destRect);
 }
